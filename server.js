@@ -62,7 +62,7 @@ wss.on("connection", (ws) => {
         console.log(`${filename} saved.`);
 
         // Update the previous buffer with the last part of the current message
-        previousAudioBuffer = message.slice(-overlapSize);
+        previousAudioBuffer = message.subarray(-overlapSize);
 
         // This will handle the transcription of individual audio files
         transcriptionQueue.push({ filePath, ws, size: "short" });

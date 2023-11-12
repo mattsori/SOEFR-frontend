@@ -131,11 +131,13 @@ function handleWebSocketMessage(message) {
 
   // Handle transcripts
   if (data.hasOwnProperty("transcript")) {
-    processTranscript(data.transcript, data.longTranscript);
+    console.log("Transcript Received");
+    processTranscript(data.transcript, data.audio_size);
   }
 
   // Handle summaries
   if (data.hasOwnProperty("summary")) {
+    console.log("Summary Received");
     document.getElementById("summaryBox").value = data.summary;
   }
 
@@ -267,13 +269,13 @@ function float32ArrayToInt16Array(float32Array) {
 /**
  * Processes and displays the transcript received from the server.
  * @param {string} transcript - The transcript text.
- * @param {boolean} isLongTranscript - Flag indicating if it's a long transcript.
+ * @param {string} audio_size - Flag indicating size of transcript.
  */
-function processTranscript(transcript, isLongTranscript) {
-  console.log("Processing transcript:", transcript);
+function processTranscript(transcript, audio_size) {
+  console.log("Processing " + audio_size + " transcript:", transcript);
   const trimmedTranscript = transcript.trim();
 
-  if (isLongTranscript) {
+  if (audio_size == "long") {
     // Add a space only if fullTranscription is not empty
     fullTranscription += fullTranscription
       ? ` ${trimmedTranscript}`

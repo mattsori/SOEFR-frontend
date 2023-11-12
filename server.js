@@ -63,7 +63,7 @@ wss.on("connection", (ws) => {
         previousAudioBuffer = message.slice(-overlapSize);
 
         // This will handle the transcription of individual audio files
-        transcriptionQueue.push({ filePath, ws, isLongTranscript: false });
+        transcriptionQueue.push({ filePath, ws, size: "short" });
 
         // Check if it's time to save the combined chunks
         if (counter % longChunkAmount === 0) {
@@ -77,11 +77,12 @@ wss.on("connection", (ws) => {
           combinedChunks = Buffer.alloc(0);
 
           // Transcribe and send the transcription of the combined audio
-          transcriptionQueue.push({
-            filePath: longFilePath,
-            ws,
-            isLongTranscript: true,
-          });
+          // transcriptionQueue.push({
+          //   filePath: longFilePath,
+          //   ws,
+          //   size: "long",
+          // });
+          await transcribeAndSend(longFilePath, ws, "long");
         }
       } else {
         console.log(JSON.parse(message));
@@ -102,8 +103,8 @@ wss.on("connection", (ws) => {
 let transcriptionQueue = new Queue(
   async (job, done) => {
     try {
-      const { filePath, ws, isLongTranscript } = job;
-      await transcribeAndSend(filePath, ws, isLongTranscript);
+      const { filePath, ws, size } = job;
+      await transcribeAndSend(filePath, ws, size);
       done();
     } catch (error) {
       console.error(`Error in job queue: ${error}`);
@@ -114,15 +115,22 @@ let transcriptionQueue = new Queue(
 ); // Ensure only one job is processed at a time
 
 // Sending to transcription server
-async function transcribeAndSend(filePath, ws, isLongTranscript) {
+async function transcribeAndSend(filePath, ws, size) {
   try {
-    const response = await axios.post("http://localhost:8000/transcribe", {
+    let transcribeEndpoint;
+    if (size == "short") {
+      transcribeEndpoint = "http://localhost:8001/transcribeshort";
+    } else {
+      transcribeEndpoint = "http://localhost:8002/transcribelong";
+    }
+
+    const response = await axios.post(transcribeEndpoint, {
       audio_file_path: filePath,
+      audio_size: size,
     });
 
     const transcript = response.data.transcription;
     console.log(transcript);
-
     // Increment the sequence for each message sent
     ws.sequence += 1;
 
@@ -131,7 +139,7 @@ async function transcribeAndSend(filePath, ws, isLongTranscript) {
       JSON.stringify({
         transcript,
         sequence: ws.sequence,
-        longTranscript: isLongTranscript,
+        audio_size: size,
       })
     );
   } catch (error) {

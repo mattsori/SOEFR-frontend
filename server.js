@@ -7,6 +7,7 @@ const express = require("express");
 const Queue = require("better-queue");
 const WebSocket = require("ws");
 const wav = require("wav");
+const { performance } = require("perf_hooks");
 
 const app = express();
 
@@ -47,6 +48,7 @@ wss.on("connection", (ws) => {
   ws.on("message", async (message) => {
     try {
       if (typeof message === "object" && message instanceof Buffer) {
+        console.log("Audio chunk received");
         // Increment the counter here
         counter++;
         combinedChunks = Buffer.concat([combinedChunks, message]);
@@ -117,20 +119,23 @@ let transcriptionQueue = new Queue(
 // Sending to transcription server
 async function transcribeAndSend(filePath, ws, size) {
   try {
+    const computeStart = performance.now();
     let transcribeEndpoint;
     if (size == "short") {
       transcribeEndpoint = "http://localhost:8001/transcribeshort";
     } else {
       transcribeEndpoint = "http://localhost:8002/transcribelong";
     }
-
+    console.log("Sending audio to transcription server");
     const response = await axios.post(transcribeEndpoint, {
       audio_file_path: filePath,
       audio_size: size,
     });
-
+    const computeEnd = performance.now();
     const transcript = response.data.transcription;
-    console.log(transcript);
+    console.log(size + " transcript: " + transcript);
+    console.log(`Transcription took ${computeEnd - computeStart} ms`);
+
     // Increment the sequence for each message sent
     ws.sequence += 1;
 

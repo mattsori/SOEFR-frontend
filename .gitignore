@@ -4,6 +4,3 @@ cloudflare-key.pem
 
 # Node Modules
 node_modules/
-
-# Recordings
-recordings/

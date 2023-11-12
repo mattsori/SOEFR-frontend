@@ -11,7 +11,7 @@ let accumulatedSamples = [];
 let audioContext;
 let sampleRate;
 let chunkSamples;
-const chunkDuration = 3; // duration of audio chunks in seconds
+const chunkDuration = 0.5; // duration of audio chunks in seconds
 let source;
 let workletNode;
 let stream;
@@ -127,24 +127,30 @@ function handleWebSocketError(error) {
 
 // Processes messages received through WebSocket
 function handleWebSocketMessage(message) {
-  const data = JSON.parse(message.data);
+  try {
+    // Attempt to parse the message data as JSON
+    const data = JSON.parse(message.data);
 
-  // Handle transcripts
-  if (data.hasOwnProperty("transcript")) {
-    console.log("Transcript Received");
-    processTranscript(data.transcript, data.audio_size);
-  }
+    // Handle transcripts
+    if (data.hasOwnProperty("transcript")) {
+      console.log("Transcript Received");
+      processTranscript(data.transcript, data.audio_size);
+    }
 
-  // Handle summaries
-  if (data.hasOwnProperty("summary")) {
-    console.log("Summary Received");
-    document.getElementById("summaryBox").value = data.summary;
-  }
+    // Handle summaries
+    if (data.hasOwnProperty("summary")) {
+      console.log("Summary Received");
+      document.getElementById("summaryBox").value = data.summary;
+    }
 
-  // Handle errors
-  if (data.hasOwnProperty("error")) {
-    console.error("WebSocket Error:", data.error);
-    showToast("WebSocket Error");
+    // Handle errors
+    if (data.hasOwnProperty("error")) {
+      console.error("WebSocket Error:", data.error);
+      showToast("WebSocket Error");
+    }
+  } catch (e) {
+    // If an error is caught, it means the message is not in JSON format
+    console.log("Non-JSON Message Received:", message.data);
   }
 }
 

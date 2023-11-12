@@ -90,7 +90,7 @@ function toggleWebSocketConnection() {
  * Initializes the WebSocket connection and sets up event handlers.
  */
 function initializeWebSocket() {
-  ws = new WebSocket("wss://soefr.com");
+  ws = new WebSocket("wss://soefr.com:2096");
   ws.binaryType = "arraybuffer";
 
   console.log("WebSocket initialized, setting up event handlers.");

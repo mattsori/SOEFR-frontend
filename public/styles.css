@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+ 
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.blue { background-color: blue; color: white; }
+.blue:hover { background-color: darkblue; }
+
+.red { background-color: red; color: white; }
+.red:hover { background-color: darkred; }
+
+.green { background-color: #4CAF50; color: white; }
+.green:hover { background-color: #45A049; }
+.green:active { background-color: #3E8C43; }
+
+#clearBtn { margin-right: 10px; }
+
+#text-boxes textarea {
+    width: 300px;
+    height: 300px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+#summaryBox { margin-left: 20px; }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.mic-btn {
+    margin-top: 20px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.mic-btn:hover { transform: scale(1.1); }
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast-message {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: opacity 0.5s, transform 0.5s;
+    transform: translateX(100%);
+}
+.toast-message.show { opacity: 1; transform: translateX(0); }
+.toast-message.hide { opacity: 0; transform: translateX(100%); }

@@ -1,0 +1,9 @@
+# Cloudflare certs
+cloudflare-cert.pem
+cloudflare-key.pem
+
+# Node Modules
+node_modules/
+
+# Recordings
+recordings/

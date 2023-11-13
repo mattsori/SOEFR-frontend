@@ -3,6 +3,7 @@ const connectionBtn = document.getElementById("connectionBtn");
 const transciptBox = document.getElementById("transcriptBox");
 const summarizeBtn = document.getElementById("summarizeBtn");
 const microphoneBtn = document.getElementById("microphoneBtn");
+const clearBtn = document.getElementById("clearBtn");
 
 // WebSocket and audio variables
 let ws;
@@ -53,12 +54,10 @@ microphoneBtn.addEventListener("click", async () => {
   toggleMicrophone();
 });
 
-// DOM element reference for the clear button
-const clearBtn = document.getElementById("clearBtn");
-
 // Event listener for the 'click' event of the clear button
 clearBtn.addEventListener("click", () => {
   transciptBox.value = ""; // Clears the first text box
+  fullTranscription = ""; // Clears Full transcription buffer
   // If you also want to clear the second text box when the clear button is clicked, uncomment the following line:
   // document.getElementById('summaryBox').value = '';
 });

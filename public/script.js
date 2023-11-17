@@ -140,6 +140,7 @@ function handleWebSocketMessage(message) {
     if (data.hasOwnProperty("summary")) {
       console.log("Summary Received");
       document.getElementById("summaryBox").value += data.summary;
+      document.getElementById("summaryBox").value += "\n";
     }
 
     // Handle errors

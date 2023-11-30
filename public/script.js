@@ -1,6 +1,7 @@
 // DOM element references
 const connectionBtn = document.getElementById("connectionBtn");
 const transciptBox = document.getElementById("transcriptBox");
+const summaryBox = document.getElementById("summaryBox");
 const summarizeBtn = document.getElementById("summarizeBtn");
 const microphoneBtn = document.getElementById("microphoneBtn");
 const clearBtn = document.getElementById("clearBtn");
@@ -65,6 +66,7 @@ clearBtn.addEventListener("click", () => {
 // Event listener for the 'Summarize' button
 summarizeBtn.addEventListener("click", () => {
   if (ws && ws.readyState === WebSocket.OPEN) {
+    summaryBox.value = "";
     ws.send(JSON.stringify({ action: "summarize", text: fullTranscription }));
   } else {
     showToast("WebSocket is not connected.");
